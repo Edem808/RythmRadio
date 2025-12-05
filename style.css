@@ -1,0 +1,271 @@
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* Important pour éviter les scrollbars */
+    background-color: #000;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* LE FOND ASCII */
+#ascii-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: -9999; /* Tout au fond */
+}
+
+/* On force le canvas généré par JS à remplir le div */
+#ascii-container canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#ui-layer {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column; /* Empile la Cover puis le Player */
+    justify-content: flex-end; /* Aligne le tout vers le bas */
+    align-items: center; /* Centre horizontalement */
+    pointer-events: none;
+    padding-bottom: 0;
+}
+
+/* --- LA COVER INDÉPENDANTE (Au-dessus) --- */
+.cover-standalone {
+    width: 320px; height: 320px; /* Carré parfait */
+    /* Espace important entre la cover et le player en dessous */
+    margin-bottom: 30px; 
+    
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    pointer-events: auto;
+}
+.cover-standalone img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* --- LE PLAYER CAPSULE (En dessous) --- */
+.player-capsule {
+    pointer-events: auto;
+    width: 400px; max-width: 90%;
+    /* Le bloc entier est remonté de 12% du bas de l'écran */
+    margin-bottom: 12vh; 
+    
+    background: rgba(10, 10, 10, 0.7);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 40px;
+    padding: 25px 30px;
+    
+    display: flex; flex-direction: column; align-items: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    position: relative; z-index: 2;
+}
+
+/* Petite animation d'entrée */
+@keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- RESPONSIVE MOBILE (Important !) --- */
+@media (max-width: 768px) {
+    .cover-standalone {
+        /* On réduit l'image sur mobile pour qu'elle tienne dans l'écran */
+        width: 250px;
+        height: 250px;
+        margin-bottom: 15px;
+    }
+}
+
+/* Ajustement hauteur écrans très petits (iPhone SE, etc.) */
+@media (max-height: 700px) {
+    .cover-standalone {
+        width: 180px;
+        height: 180px;
+    }
+    /* On remonte un peu le tout */
+    .player-capsule {
+        margin-bottom: 5vh; 
+    }
+}
+
+/* Titre */
+.track-info {
+    color: #e0e0e0;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Barre de progression */
+.timeline-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: #a0a0a0;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.progress-bg {
+    flex-grow: 1;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 15px;
+    position: relative;
+}
+
+.progress-fill {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 0%; /* JS va changer ça */
+    background: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Boutons */
+.controls {
+    display: flex;
+    gap: 20px;
+}
+
+.btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    width: 45px; height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    transition: all 0.2s;
+    border-radius: 0; /* On garde les boutons carrés à l'intérieur */
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #fff;
+}
+
+/* Le bouton Play un peu plus voyant */
+#btn-play-pause {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+
+.footer-right {
+    position: absolute;
+    bottom: 30px; /* Un peu plus bas pour compenser le padding */
+    right: 30px;  /* Un peu plus à droite pour compenser le padding */   
+    text-align: right;
+    color: #000000;
+    font-size: 0.65rem;
+    line-height: 1.4;
+    pointer-events: auto; 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px; /* Espace entre les éléments internes */
+    z-index: 10000; /* Toujours au premier plan */
+}
+/* Liens (About, Newsletter) */
+.footer-links a {
+    color: #000000;
+    text-decoration: none;
+    display: block; /* Un lien par ligne */
+    margin-bottom: 5px;
+    transition: opacity 0.2s;
+}
+
+.footer-links a:hover {
+    opacity: 0.6;
+    text-decoration: underline;
+}
+
+/* Blocs de texte (Copyright, Adresse) */
+.footer-text {
+    opacity: 0.8;
+}
+
+/* Le Logo animé */
+.footer-logo svg {
+    display: block;
+    animation: spin-slow 10s linear infinite; /* Rotation lente */
+}
+
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+
+    /* 1. Ajustement du conteneur global */
+    #ui-layer {
+        justify-content: center; /* Sur mobile, on centre tout verticalement */
+        padding-bottom: 0;
+    }
+
+    /* 2. Le Lecteur sur Mobile */
+    .player-capsule {
+        width: 90%; /* Prend presque toute la largeur */
+        margin-bottom: 20px; /* Moins d'espace en bas */
+        padding: 20px; /* Un peu moins de padding interne */
+    }
+    
+    /* 3. Le Footer (Infos Droite) sur Mobile */
+    .footer-right {
+        /* On annule la position absolue pour qu'il rentre dans le flux */
+        position: relative; 
+        bottom: auto; 
+        right: auto;
+        
+        /* On le centre et on le rend plus compact */
+        width: 85%;
+        margin-top: 20px; /* Espace entre le player et le footer */
+        align-items: center; /* Centre le contenu */
+        text-align: center;
+        
+        /* On réduit un peu la taille du texte */
+        font-size: 0.6rem;
+        padding: 20px;
+        
+        /* On peut changer l'ordre si on veut le footer en haut, 
+           mais ici on le garde en bas du player */
+        order: 2; 
+    }
+    
+    /* On cache le logo qui tourne sur mobile pour gagner de la place (optionnel) */
+    .footer-logo {
+        display: none;
+    }
+    
+    /* On met les liens côte à côte sur mobile au lieu de liste */
+    .footer-links {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .footer-links a {
+        display: inline-block;
+    }
+}
+
