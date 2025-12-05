@@ -32,7 +32,7 @@ t.setup(async () => {
         // --- Configuration du rendu ---
         myVideo.characters(" .:/@");
         myVideo.charColorMode("fixed").charColor(233, 237, 240);
-        myVideo.cellColorMode("fixed").cellColor (0, 0, 0);  // Noir
+        myVideo.cellColorMode("fixed").cellColor (0, 88, 230);  // Noir
         
         // On active la boucle et la lecture auto
         myVideo.loop();
@@ -119,3 +119,22 @@ function formatTime(seconds) {
 window.addEventListener('resize', () => {
    location.reload();
 });
+
+function updateLedClock() {
+    const clockEl = document.getElementById('led-clock');
+    
+    if (clockEl) {
+        const now = new Date();
+        // Format simple HH:MM
+        const timeString = now.toLocaleTimeString('fr-FR', { 
+            hour: '2-digit', 
+            minute: '2-digit'
+        });
+        // On remplace les ":" par un espace qui clignote (optionnel) ou fixe
+        clockEl.textContent = timeString; 
+    }
+}
+
+// Mise à jour chaque seconde
+setInterval(updateLedClock, 1000);
+updateLedClock();

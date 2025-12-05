@@ -1,3 +1,5 @@
+@import url('https://fonts.cdnfonts.com/css/bpdotsunicase');
+
 body {
     margin: 0;
     padding: 0;
@@ -55,18 +57,85 @@ body {
 .player-capsule {
     pointer-events: auto;
     width: 400px; max-width: 90%;
-    /* Le bloc entier est remonté de 12% du bas de l'écran */
+    font-family: 'BPdotsUnicase', sans-serif;
     margin-bottom: 12vh; 
-    
     background: rgba(10, 10, 10, 0.7);
     backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 40px;
-    padding: 25px 30px;
-    
+    padding: 25px 30px;    
     display: flex; flex-direction: column; align-items: center;
     box-shadow: 0 10px 40px rgba(0,0,0,0.6);
     position: relative; z-index: 2;
+}
+
+/* --- WIDGET LED / BIT STYLE --- */
+.led-matrix-widget {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    z-index: 10000;
+    pointer-events: auto;
+
+    /* Fond noir */
+    background-color: #000;
+    
+    /* LE SECRET : Création de la grille de points gris (LEDs éteintes) */
+    background-image: radial-gradient(#333 20%, transparent 20%);
+    background-position: 0 0;
+    background-size: 6px 6px; /* Taille de chaque point de la grille */
+    
+    padding: 15px 20px;
+    border: 2px solid #333; /* Bordure brute */
+    
+    /* Typographie */
+    font-family: 'BPdotsUnicase', sans-serif; /* La police à points */
+    color: #e0e0e0; /* Couleur des LEDs allumées */
+    text-transform: uppercase;
+    line-height: 1.2;
+
+}
+
+/* L'heure en gros format */
+.led-row.large {
+    font-size: 3rem; /* Très gros comme sur l'image */
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    color: #fff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Effet de lumière */
+}
+
+/* Les textes normaux */
+.led-row {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+.led-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Animation de clignotement simple */
+.blink-led {
+    animation: blink-hard 1s steps(2, start) infinite;
+}
+
+@keyframes blink-hard {
+    to { visibility: hidden; }
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+    .led-matrix-widget {
+        bottom: auto; 
+        top: 20px; /* Sur mobile on le met en haut à gauche pour ne pas gêner le player */
+        left: 20px;
+        transform: scale(0.7); /* On le réduit un peu */
+        transform-origin: top left;
+    }
 }
 
 /* Petite animation d'entrée */
@@ -100,7 +169,7 @@ body {
 /* Titre */
 .track-info {
     color: #e0e0e0;
-    font-size: 0.85rem;
+    font-size: 2rem;
     margin-bottom: 20px;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -153,7 +222,7 @@ body {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'BPdotsUnicase', sans-serif;
     font-size: 1rem;
     transition: all 0.2s;
     border-radius: 0; /* On garde les boutons carrés à l'intérieur */
@@ -229,43 +298,7 @@ body {
         margin-bottom: 20px; /* Moins d'espace en bas */
         padding: 20px; /* Un peu moins de padding interne */
     }
-    
-    /* 3. Le Footer (Infos Droite) sur Mobile */
-    .footer-right {
-        /* On annule la position absolue pour qu'il rentre dans le flux */
-        position: relative; 
-        bottom: auto; 
-        right: auto;
-        
-        /* On le centre et on le rend plus compact */
-        width: 85%;
-        margin-top: 20px; /* Espace entre le player et le footer */
-        align-items: center; /* Centre le contenu */
-        text-align: center;
-        
-        /* On réduit un peu la taille du texte */
-        font-size: 0.6rem;
-        padding: 20px;
-        
-        /* On peut changer l'ordre si on veut le footer en haut, 
-           mais ici on le garde en bas du player */
-        order: 2; 
-    }
-    
-    /* On cache le logo qui tourne sur mobile pour gagner de la place (optionnel) */
-    .footer-logo {
-        display: none;
-    }
-    
-    /* On met les liens côte à côte sur mobile au lieu de liste */
-    .footer-links {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 10px;
-    }
-    
-    .footer-links a {
-        display: inline-block;
-    }
+
+
 }
 
